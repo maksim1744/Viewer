@@ -11,6 +11,9 @@
 #include <QDebug>
 #include <QSplitter>
 #include <QPushButton>
+#include <QGridLayout>
+#include <QSlider>
+#include <QFrame>
 
 // QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,9 +29,6 @@ public:
 
 private:
     Ui::MainWindow *ui;
-
-    QSplitter *splitter1;
-    QPushButton *btn;
 
     Scene *scene;
 

@@ -12,9 +12,11 @@
 #include <QBrush>
 #include <QColor>
 #include <QDebug>
+#include <QSlider>
 #include <string>
 #include <iostream>
 #include <vector>
+#include <math.h>
 
 class Scene : public QWidget {
 public:
@@ -24,17 +26,26 @@ public:
     qreal transformLength(qreal length);
 
     int getPenWidth();
+    int getTickCount();
+
+    void setSlider(QSlider *slider);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
 
 private:
     void loadData();
     void initScene();
     Object* stringToObject(std::string s);
+    void updateSlider();
+    void setScale(double new_scale);
+    void setTick(int new_tick);
+
+    QSlider *slider = nullptr;
 
     QPainter *painter;
 

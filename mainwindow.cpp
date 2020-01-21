@@ -6,14 +6,23 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
-    splitter1 = new QSplitter();
+    auto grid = new QGridLayout();
+
+    auto splitter1 = new QSplitter();
     scene = new Scene(this);
     splitter1->setOrientation(Qt::Horizontal);
-    btn = new QPushButton();
     splitter1->addWidget(scene);
-//    splitter1->addWidget(btn);
     splitter1->setSizes(QList<int>() << 1600);
-    this->setCentralWidget(splitter1);
+    grid->addWidget(splitter1, 0, 0);
+
+    auto tick_slider = new QSlider();
+    tick_slider->setOrientation(Qt::Horizontal);
+    scene->setSlider(tick_slider);
+    grid->addWidget(tick_slider, 1, 0);
+
+    QWidget *widget = new QWidget();
+    widget->setLayout(grid);
+    this->setCentralWidget(widget);
 }
 
 MainWindow::~MainWindow() {

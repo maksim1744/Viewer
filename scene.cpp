@@ -27,6 +27,28 @@ int Scene::getPenWidth() {
     return pen_width;
 }
 
+int Scene::getTickCount() {
+    return data.size();
+}
+
+void Scene::setSlider(QSlider *slider) {
+    this->slider = slider;
+    if (slider == nullptr) return;
+    connect(this->slider, &QSlider::valueChanged, [&](){this->tick = this->slider->value(); this->update();});
+    updateSlider();
+}
+
+void Scene::updateSlider() {
+    if (slider == nullptr) return;
+    slider->setMinimum(0);
+    if (data.empty()) {
+        slider->setMaximum(0);
+    } else {
+        slider->setMaximum(data.size() - 1);
+    }
+    slider->setValue(tick);
+}
+
 void Scene::mousePressEvent(QMouseEvent *event) {
     prev_mouse_pos = event->pos();
 }
@@ -73,6 +95,7 @@ void Scene::loadData() {
             data.back().push_back(stringToObject(s));
         }
     }
+    updateSlider();
 }
 
 Object* Scene::stringToObject(std::string s) {
@@ -98,29 +121,41 @@ void Scene::initScene() {
     }
 }
 
-void Scene::keyPressEvent(QKeyEvent *event) {
-    double new_scale = scale;
-    if (event->key() == Qt::Key_Equal) {
-        new_scale = scale * 1.5;
-    } else if (event->key() == Qt::Key_Minus) {
-        new_scale = scale / 1.5;
-    } else if (event->key() == Qt::Key_0) {
-        new_scale = 1;
-    } else if (event->key() == Qt::Key_Right) {
-        if (tick + 1 < (int)data.size())
-            tick++;
-    } else if (event->key() == Qt::Key_Left) {
-        if (tick > 0)
-            tick--;
-    }
-    if (new_scale != scale) {
-        double k = (1.0 / scale - 1.0 / new_scale) / 2;
-        scene_pos.rx() += size().width() * k;
-        scene_pos.ry() += size().height() * k;
-        scale = new_scale;
-    }
-    if (event->key() == Qt::Key_0) {
+void Scene::setScale(double new_scale) {
+    double k = (1.0 / scale - 1.0 / new_scale) / 2;
+    scene_pos.rx() += size().width() * k;
+    scene_pos.ry() += size().height() * k;
+    scale = new_scale;
+    if (new_scale == 1) {
         initScene();
     }
     update();
+}
+
+void Scene::setTick(int new_tick) {
+    if (new_tick >= (int)data.size())
+        new_tick = (int)data.size() - 1;
+    if (new_tick < 0)
+        new_tick = 0;
+    tick = new_tick;
+    updateSlider();
+    update();
+}
+
+void Scene::keyPressEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Equal) {
+        setScale(scale * 1.5);
+    } else if (event->key() == Qt::Key_Minus) {
+        setScale(scale / 1.5);
+    } else if (event->key() == Qt::Key_0) {
+        setScale(1);
+    } else if (event->key() == Qt::Key_Right) {
+        setTick(tick + 1);
+    } else if (event->key() == Qt::Key_Left) {
+        setTick(tick - 1);
+    }
+}
+
+void Scene::wheelEvent(QWheelEvent *event) {
+    setScale(scale * std::pow(1.1, event->angleDelta().y() / 120.0));
 }
