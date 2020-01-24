@@ -76,7 +76,8 @@ void Scene::mousePressEvent(QMouseEvent *event) {
 void Scene::mouseMoveEvent(QMouseEvent *event) {
     QPointF mouse_pos = event->pos();
     auto delta = (mouse_pos - prev_mouse_pos) / scale;
-    delta.ry() *= -1;
+    if (!y_zero_on_top)
+        delta.ry() *= -1;
     scene_pos -= delta;
     prev_mouse_pos = mouse_pos;
     update();
@@ -85,7 +86,8 @@ void Scene::mouseMoveEvent(QMouseEvent *event) {
 QPointF Scene::transformPoint(QPointF point) {
     point -= scene_pos;
     point *= scale;
-    point.ry() = size().height() - point.ry();
+    if (!y_zero_on_top)
+        point.ry() = size().height() - point.ry();
     return point;
 }
 
@@ -109,6 +111,8 @@ void Scene::loadData() {
                 pen_width = std::strtol(&s[5], nullptr, 10);
             } else if (s.substr(0, 5) == "speed") {
                 run_speed = std::strtod(&s[5], nullptr);
+            } else if (s.substr(0, 5) == "flipy") {
+                y_zero_on_top = true;
             } else {
                 initial_data.push_back(stringToObject(s));
             }

@@ -73,6 +73,8 @@ private:
     bool is_running = false;
     QTimer *run_timer;
 
+    bool y_zero_on_top = false;
+
     std::vector<std::vector<Object*>> data;
     std::vector<Object*> initial_data;
 
