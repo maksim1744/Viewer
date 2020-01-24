@@ -31,22 +31,27 @@ int Scene::getTickCount() {
     return data.size();
 }
 
-void Scene::setSlider(QSlider *slider) {
-    this->slider = slider;
+void Scene::setTickSlider(QSlider *slider) {
+    this->tick_slider = slider;
     if (slider == nullptr) return;
-    connect(this->slider, &QSlider::valueChanged, [&](){this->tick = this->slider->value(); this->update();});
-    updateSlider();
+    connect(this->tick_slider, &QSlider::valueChanged, [&](){this->tick = this->tick_slider->value(); this->update();});
+    updateTickSlider();
 }
 
-void Scene::updateSlider() {
-    if (slider == nullptr) return;
-    slider->setMinimum(0);
+void Scene::setPlayButton(QPushButton *button) {
+    play_button = button;
+    connect(play_button, &QPushButton::released, [&](){this->onPlayPressed();});
+}
+
+void Scene::updateTickSlider() {
+    if (tick_slider == nullptr) return;
+    tick_slider->setMinimum(0);
     if (data.empty()) {
-        slider->setMaximum(0);
+        tick_slider->setMaximum(0);
     } else {
-        slider->setMaximum(data.size() - 1);
+        tick_slider->setMaximum(data.size() - 1);
     }
-    slider->setValue(tick);
+    tick_slider->setValue(tick);
 }
 
 void Scene::mousePressEvent(QMouseEvent *event) {
@@ -90,12 +95,15 @@ void Scene::loadData() {
                 scene_size = Object::parsePoint(s, 5);
             } else if (s.substr(0, 5) == "width") {
                 pen_width = std::strtol(&s[5], nullptr, 10);
+            } else if (s.substr(0, 5) == "speed") {
+                run_speed = std::strtod(&s[5], nullptr);
             }
         } else {
             data.back().push_back(stringToObject(s));
         }
     }
-    updateSlider();
+    if (data.empty()) data.emplace_back();
+    updateTickSlider();
 }
 
 Object* Scene::stringToObject(std::string s) {
@@ -108,6 +116,32 @@ Object* Scene::stringToObject(std::string s) {
     else if (type == "circle") return new Circle(s);
     else if (type == "line") return new Line(s);
     return nullptr;
+}
+
+void Scene::onPlayPressed() {
+    if (!is_running) {
+        if (tick + 1 == (int)data.size())
+            setTick(0);
+        play_button->setText("Stop");
+        is_running = true;
+        run_timer = new QTimer();
+        run_timer->setInterval(1000.0 / run_speed);
+        connect(run_timer, &QTimer::timeout, [&](){
+            ++tick;
+            if (tick == (int)data.size()) {
+                --tick;
+                is_running = false;
+                play_button->setText("Play");
+                run_timer->stop();
+            }
+            setTick(tick);
+        });
+        run_timer->start();
+    } else {
+        run_timer->stop();
+        play_button->setText("Play");
+        is_running = false;
+    }
 }
 
 void Scene::initScene() {
@@ -138,7 +172,7 @@ void Scene::setTick(int new_tick) {
     if (new_tick < 0)
         new_tick = 0;
     tick = new_tick;
-    updateSlider();
+    updateTickSlider();
     update();
 }
 
@@ -153,6 +187,8 @@ void Scene::keyPressEvent(QKeyEvent *event) {
         setTick(tick + 1);
     } else if (event->key() == Qt::Key_Left) {
         setTick(tick - 1);
+    } else if (event->key() == Qt::Key_Space) {
+        onPlayPressed();
     }
 }
 

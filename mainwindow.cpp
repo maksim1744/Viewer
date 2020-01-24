@@ -17,12 +17,25 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto tick_slider = new QSlider();
     tick_slider->setOrientation(Qt::Horizontal);
-    scene->setSlider(tick_slider);
-    grid->addWidget(tick_slider, 1, 0);
+    scene->setTickSlider(tick_slider);
 
-    QWidget *widget = new QWidget();
-    widget->setLayout(grid);
-    this->setCentralWidget(widget);
+    auto play_btn = new QPushButton();
+    play_btn->setText("Play");
+    play_btn->setFixedSize(120, 60);
+    scene->setPlayButton(play_btn);
+
+    auto slider_grid = new QGridLayout();
+    slider_grid->addWidget(tick_slider, 0, 0);
+    slider_grid->addWidget(play_btn, 0, 1);
+
+    QWidget *widget1 = new QWidget();
+    widget1->setLayout(slider_grid);
+    widget1->setMaximumHeight(80);
+    grid->addWidget(widget1, 1, 0);
+
+    QWidget *widget2 = new QWidget();
+    widget2->setLayout(grid);
+    this->setCentralWidget(widget2);
 }
 
 MainWindow::~MainWindow() {
