@@ -14,6 +14,10 @@ void Scene::paintEvent(QPaintEvent *event) {
     painter = new QPainter(this);
     painter->setPen(QPen(Qt::white, 30));
     painter->fillRect(event->rect(), QBrush(QColor(200, 200, 200)));
+    for (auto object : initial_data) {
+        if (object == nullptr) continue;
+        object->draw(*painter, *this);
+    }
     if (0 <= tick && tick < (int)data.size()) {
         for (auto object : data[tick]) {
             if (object == nullptr) continue;
@@ -92,15 +96,12 @@ qreal Scene::transformLength(qreal length) {
 void Scene::loadData() {
     data.clear();
     std::string s;
+
     while (std::getline(std::cin, s)) {
         if (s == "tick") {
             data.emplace_back();
-            Rectangle *rect = new Rectangle();
-            rect->center = scene_size / 2;
-            rect->size = scene_size;
-            rect->color = Qt::white;
-            rect->fill = true;
-            data.back().push_back(rect);
+        } else if (s == "end") {
+            break;
         } else if (data.empty()) {  // init
             if (s.substr(0, 4) == "size") {
                 scene_size = Object::parsePoint(s, 5);
@@ -108,11 +109,21 @@ void Scene::loadData() {
                 pen_width = std::strtol(&s[5], nullptr, 10);
             } else if (s.substr(0, 5) == "speed") {
                 run_speed = std::strtod(&s[5], nullptr);
+            } else {
+                initial_data.push_back(stringToObject(s));
             }
         } else {
             data.back().push_back(stringToObject(s));
         }
     }
+
+    Rectangle *rect = new Rectangle();
+    rect->center = scene_size / 2;
+    rect->size = scene_size;
+    rect->color = Qt::white;
+    rect->fill = true;
+    initial_data.insert(initial_data.begin(), rect);
+
     if (data.empty()) data.emplace_back();
     updateTickSlider();
 }

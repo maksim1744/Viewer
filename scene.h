@@ -74,6 +74,7 @@ private:
     QTimer *run_timer;
 
     std::vector<std::vector<Object*>> data;
+    std::vector<Object*> initial_data;
 
     int tick = 0;
 };
