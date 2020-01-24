@@ -18,6 +18,7 @@ public:
 
     QPointF center, size;
     QColor color;
+    int width = -1;
     bool fill = false;
 };
 

@@ -16,6 +16,8 @@ Line::Line(std::string s) {
             finish = parsePoint(s, ind + 2);
         } else if (s.substr(ind, 4) == "col=") {
             color = parseColor(s, ind + 4);
+        } else if (s.substr(ind, 2) == "w=") {
+            width = strtol(&s[ind + 2], nullptr, 10);
         }
         while (ind < s.size() && s[ind] != ' ') ++ind;
         while (ind < s.size() && s[ind] == ' ') ++ind;
@@ -23,6 +25,7 @@ Line::Line(std::string s) {
 }
 
 void Line::draw(QPainter &painter, Scene &scene) {
-    painter.setPen(QPen(color, scene.getPenWidth()));
+    if (width <= 0) width = scene.getPenWidth();
+    painter.setPen(QPen(color, width));
     painter.drawLine(scene.transformPoint(start), scene.transformPoint(finish));
 }

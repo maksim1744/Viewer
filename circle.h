@@ -17,6 +17,7 @@ public:
     QPointF center;
     qreal radius;
     QColor color;
+    int width = -1;
     bool fill = false;
 };
 

@@ -18,6 +18,8 @@ Circle::Circle(std::string s) {
             color = parseColor(s, ind + 4);
         } else if (s.substr(ind, 2) == "f=") {
             fill = strtol(&s[ind + 2], nullptr, 10);
+        } else if (s.substr(ind, 2) == "w=") {
+            width = strtol(&s[ind + 2], nullptr, 10);
         }
         while (ind < s.size() && s[ind] != ' ') ++ind;
         while (ind < s.size() && s[ind] == ' ') ++ind;
@@ -27,7 +29,8 @@ Circle::Circle(std::string s) {
 void Circle::draw(QPainter &painter, Scene &scene) {
     auto c = scene.transformPoint(center);
     auto r = scene.transformLength(radius);
-    painter.setPen(QPen(color, scene.getPenWidth()));
+    if (width == -1) width = scene.getPenWidth();
+    painter.setPen(QPen(color, width));
     if (fill) {
         auto b = painter.brush();
         painter.setBrush(QBrush(color));

@@ -16,6 +16,7 @@ public:
 
     QPointF start, finish;
     QColor color;
+    int width = -1;
 };
 
 #endif // LINE_H

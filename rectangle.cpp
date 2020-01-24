@@ -18,6 +18,8 @@ Rectangle::Rectangle(std::string s) {
             color = parseColor(s, ind + 4);
         } else if (s.substr(ind, 2) == "f=") {
             fill = strtol(&s[ind + 2], nullptr, 10);
+        }  else if (s.substr(ind, 2) == "w=") {
+            width = strtol(&s[ind + 2], nullptr, 10);
         }
         while (ind < s.size() && s[ind] != ' ') ++ind;
         while (ind < s.size() && s[ind] == ' ') ++ind;
@@ -25,11 +27,12 @@ Rectangle::Rectangle(std::string s) {
 }
 
 void Rectangle::draw(QPainter &painter, Scene &scene) {
+    if (width == -1) width = scene.getPenWidth();
     QRectF rect = QRectF(scene.transformPoint(center - size / 2), scene.transformPoint(center + size / 2));
     if (fill) {
         painter.fillRect(rect, QBrush(color));
     } else {
-        painter.setPen(QPen(color, scene.getPenWidth()));
+        painter.setPen(QPen(color, width));
         painter.drawRect(rect);
     }
 }
