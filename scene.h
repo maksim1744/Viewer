@@ -6,15 +6,17 @@
 #include "rectangle.h"
 #include "line.h"
 
-#include <QWidget>
-#include <QPainter>
-#include <QPaintEvent>
 #include <QBrush>
 #include <QColor>
 #include <QDebug>
-#include <QSlider>
+#include <QPaintEvent>
+#include <QPainter>
 #include <QPushButton>
+#include <QSlider>
+#include <QSlider>
 #include <QTimer>
+#include <QWidget>
+
 #include <string>
 #include <iostream>
 #include <vector>

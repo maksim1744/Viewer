@@ -3,17 +3,19 @@
 
 #include "scene.h"
 
-#include <QMainWindow>
-#include <QLayout>
-#include <QPainter>
+#include <QDebug>
+#include <QFrame>
 #include <QGraphicsScene>
 #include <QGraphicsView>
-#include <QDebug>
-#include <QSplitter>
-#include <QPushButton>
 #include <QGridLayout>
+#include <QLabel>
+#include <QLayout>
+#include <QMainWindow>
+#include <QPainter>
+#include <QPushButton>
 #include <QSlider>
-#include <QFrame>
+#include <QSlider>
+#include <QSplitter>
 
 // QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
