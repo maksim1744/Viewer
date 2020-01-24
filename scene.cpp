@@ -34,13 +34,18 @@ int Scene::getTickCount() {
 void Scene::setTickSlider(QSlider *slider) {
     this->tick_slider = slider;
     if (slider == nullptr) return;
-    connect(this->tick_slider, &QSlider::valueChanged, [&](){this->tick = this->tick_slider->value(); this->update();});
+    connect(this->tick_slider, &QSlider::valueChanged, [&](){this->setTick(this->tick_slider->value());});
     updateTickSlider();
 }
 
 void Scene::setPlayButton(QPushButton *button) {
     play_button = button;
     connect(play_button, &QPushButton::released, [&](){this->onPlayPressed();});
+}
+
+void Scene::setTickLabel(QLabel *label) {
+    this->tick_label = label;
+    updateTickLabel();
 }
 
 void Scene::updateTickSlider() {
@@ -52,6 +57,12 @@ void Scene::updateTickSlider() {
         tick_slider->setMaximum(data.size() - 1);
     }
     tick_slider->setValue(tick);
+}
+
+void Scene::updateTickLabel() {
+    std::string current = std::to_string(tick + 1);
+    std::string count = std::to_string(data.size());
+    tick_label->setText(QString((current + " / " + count).c_str()));
 }
 
 void Scene::mousePressEvent(QMouseEvent *event) {
@@ -173,6 +184,7 @@ void Scene::setTick(int new_tick) {
         new_tick = 0;
     tick = new_tick;
     updateTickSlider();
+    updateTickLabel();
     update();
 }
 

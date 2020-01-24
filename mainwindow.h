@@ -14,7 +14,6 @@
 #include <QPainter>
 #include <QPushButton>
 #include <QSlider>
-#include <QSlider>
 #include <QSplitter>
 
 // QT_BEGIN_NAMESPACE

@@ -6,6 +6,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow) {
     ui->setupUi(this);
 
+    setWindowTitle("Viewer");
+
     auto grid = new QGridLayout();
 
     auto splitter1 = new QSplitter();
@@ -14,6 +16,11 @@ MainWindow::MainWindow(QWidget *parent)
     splitter1->addWidget(scene);
     splitter1->setSizes(QList<int>() << 1600);
     grid->addWidget(splitter1, 0, 0);
+
+    auto tick_label = new QLabel();
+    tick_label->setMinimumWidth(150);
+    tick_label->setAlignment(Qt::AlignCenter);
+    scene->setTickLabel(tick_label);
 
     auto tick_slider = new QSlider();
     tick_slider->setOrientation(Qt::Horizontal);
@@ -77,8 +84,9 @@ MainWindow::MainWindow(QWidget *parent)
     scene->setPlayButton(play_btn);
 
     auto slider_grid = new QGridLayout();
-    slider_grid->addWidget(tick_slider, 0, 0);
-    slider_grid->addWidget(play_btn, 0, 1);
+    slider_grid->addWidget(tick_label, 0, 0);
+    slider_grid->addWidget(tick_slider, 0, 1);
+    slider_grid->addWidget(play_btn, 0, 2);
     slider_grid->setSpacing(20);
 
     QWidget *widget1 = new QWidget();

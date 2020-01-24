@@ -1,14 +1,15 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "object.h"
 #include "circle.h"
-#include "rectangle.h"
 #include "line.h"
+#include "object.h"
+#include "rectangle.h"
 
 #include <QBrush>
 #include <QColor>
 #include <QDebug>
+#include <QLabel>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QPushButton>
@@ -17,10 +18,10 @@
 #include <QTimer>
 #include <QWidget>
 
-#include <string>
 #include <iostream>
-#include <vector>
 #include <math.h>
+#include <string>
+#include <vector>
 
 class Scene : public QWidget {
 public:
@@ -34,6 +35,7 @@ public:
 
     void setTickSlider(QSlider *tick_slider);
     void setPlayButton(QPushButton *button);
+    void setTickLabel(QLabel *tick_label);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -47,11 +49,13 @@ private:
     void initScene();
     Object* stringToObject(std::string s);
     void updateTickSlider();
+    void updateTickLabel();
     void setScale(double new_scale);
     void setTick(int new_tick);
     void onPlayPressed();
 
     QSlider *tick_slider = nullptr;
+    QLabel *tick_label = nullptr;
     QPushButton *play_button;
 
     QPainter *painter;
