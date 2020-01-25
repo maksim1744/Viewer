@@ -1,10 +1,6 @@
 #include "object.h"
 
-Object::Object() {
-}
-
-void Object::draw(DrawProperties &draw_properties) {}
-void Object::writeToTree(TreeItem *parent) {}
+Object::Object() {}
 
 bool Object::needToDraw(DrawProperties &draw_properties) {
     if (tree_item != nullptr && !tree_item->isChecked()) return false;
@@ -13,6 +9,10 @@ bool Object::needToDraw(DrawProperties &draw_properties) {
         if (draw_properties.active_tags.find(tag) != draw_properties.active_tags.end())
             return true;
     return false;
+}
+
+void Object::removeTreeItems() {
+    tree_item = nullptr;
 }
 
 QPointF Object::parsePoint(std::string &s, int ind) {

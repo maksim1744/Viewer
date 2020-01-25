@@ -100,7 +100,10 @@ void Scene::updateObjectTree() {
         model->update(data, tick);
         auto m = object_tree->model();
         object_tree->setModel(model);
-        delete m;
+        if (m != nullptr) {
+            data[((TreeModel *)m)->getCurrentTick()]->removeTreeItems();
+            delete m;
+        }
     }
 }
 
@@ -160,7 +163,7 @@ void Scene::loadData() {
         if (!ok) break;
 
         if (s == "tick") {
-            data.push_back(new Group("tick " + std::to_string(data.size())));
+            data.push_back(new Group("tick_" + std::to_string(data.size())));
         } else if (s == "end") {
             break;
         } else {

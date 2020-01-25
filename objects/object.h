@@ -18,10 +18,11 @@ class Object {
 public:
     Object();
 
-    virtual void draw(DrawProperties &draw_properties);
-    virtual void writeToTree(TreeItem *parent);
+    virtual void draw(DrawProperties &draw_properties) = 0;
+    virtual void writeToTree(TreeItem *parent) = 0;
 
     bool needToDraw(DrawProperties &draw_properties);
+    virtual void removeTreeItems();
 
     static QPointF parsePoint(std::string& s, int ind);
     static QColor parseColor(std::string& s, int ind);

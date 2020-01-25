@@ -20,6 +20,7 @@ public:
     ~TreeModel();
 
     void update(std::vector<Group *> &data, int tick);
+    int getCurrentTick();
 
     QVariant data(const QModelIndex &index, int role) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
@@ -36,6 +37,8 @@ private:
     TreeItem *getItem(const QModelIndex &index) const;
     void addData(Group *data, TreeItem *parent);
     void setupModelData(Group *initial_data, TreeItem *parent);
+
+    int current_tick = 0;
 
     TreeItem *root_item;
 };

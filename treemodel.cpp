@@ -134,10 +134,15 @@ void TreeModel::addData(Group *data, TreeItem *parent) {
 }
 
 void TreeModel::update(std::vector<Group *> &data, int tick) {
+    current_tick = tick;
     while (root_item->childCount() > 1) {
         root_item->popChild();
     }
     addData(data[tick], root_item);
+}
+
+int TreeModel::getCurrentTick() {
+    return current_tick;
 }
 
 void TreeModel::setupModelData(Group *initial_data, TreeItem *parent) {

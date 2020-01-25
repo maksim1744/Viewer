@@ -14,6 +14,8 @@ public:
     void draw(DrawProperties &draw_properties) override;
     void writeToTree(TreeItem *parent) override;
 
+    void removeTreeItems() override;
+
     std::vector<Object*> objects;
 
     std::string name = "";

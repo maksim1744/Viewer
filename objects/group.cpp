@@ -40,3 +40,10 @@ void Group::writeToTree(TreeItem *parent) {
         if (object != nullptr)
             object->writeToTree(tree_item);
 }
+
+void Group::removeTreeItems() {
+    tree_item = nullptr;
+    for (auto object : objects)
+        if (object != nullptr)
+            object->removeTreeItems();
+}
