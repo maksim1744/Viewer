@@ -14,16 +14,20 @@ void Scene::paintEvent(QPaintEvent *event) {
     painter = new QPainter(this);
     painter->setPen(QPen(Qt::white, 30));
     painter->fillRect(event->rect(), QBrush(QColor(200, 200, 200)));
-    for (auto object : initial_data) {
-        if (object == nullptr) continue;
-        object->draw(*painter, *this);
-    }
-    if (0 <= tick && tick < (int)data.size()) {
-        for (auto object : data[tick]) {
-            if (object == nullptr) continue;
-            object->draw(*painter, *this);
-        }
-    }
+    if (initial_data != nullptr && !initial_data->hidden)
+        initial_data->draw(*painter, *this);
+    if (data[tick] != nullptr && !data[tick]->hidden)
+        data[tick]->draw(*painter, *this);
+    // for (auto object : initial_data) {
+    //     if (object != nullptr && !object->hidden)
+    //         object->draw(*painter, *this);
+    // }
+    // if (0 <= tick && tick < (int)data.size()) {
+    //     for (auto object : data[tick]) {
+    //         if (object == nullptr) continue;
+    //         object->draw(*painter, *this);
+    //     }
+    // }
     painter->end();
 }
 
@@ -77,6 +81,7 @@ void Scene::updateTickLabel() {
 void Scene::updateObjectTree() {
     if (!is_running) {
         TreeModel *model = new TreeModel(initial_data);
+        connect(model, &QAbstractItemModel::dataChanged, [&](){update();});
         model->update(data, tick);
         auto m = object_tree->model();
         object_tree->setModel(model);
@@ -112,7 +117,7 @@ qreal Scene::transformLength(qreal length) {
 
 void Scene::loadData() {
     data.clear();
-    data.emplace_back();
+    data.push_back(new Group());
 
     std::string s;
 
@@ -132,7 +137,7 @@ void Scene::loadData() {
             if (groups.size() >= 2) {
                 groups[groups.size() - 2]->objects.push_back(groups.back());
             } else {
-                data.back().push_back(groups.back());
+                data.back()->objects.push_back(groups.back());
             }
             groups.pop_back();
         }
@@ -140,7 +145,7 @@ void Scene::loadData() {
         if (!ok) break;
 
         if (s == "tick") {
-            data.emplace_back();
+            data.push_back(new Group("tick " + std::to_string(data.size())));
         } else if (s == "end") {
             break;
         } else {
@@ -163,7 +168,7 @@ void Scene::loadData() {
                 groups.push_back((Group *)object);
             } else {
                 if (groups.empty())
-                    data.back().push_back(object);
+                    data.back()->objects.push_back(object);
                 else
                     groups.back()->objects.push_back(object);
             }
@@ -178,7 +183,9 @@ void Scene::loadData() {
     rect->size = scene_size;
     rect->color = Qt::white;
     rect->fill = true;
-    initial_data.insert(initial_data.begin(), rect);
+    initial_data->objects.insert(initial_data->objects.begin(), rect);
+
+    initial_data->name = "initial";
 
     if (data.empty()) data.emplace_back();
     updateTickSlider();

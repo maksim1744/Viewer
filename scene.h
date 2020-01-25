@@ -1,6 +1,8 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+class Group;
+
 #include "circle.h"
 #include "group.h"
 #include "line.h"
@@ -81,8 +83,8 @@ private:
 
     bool y_zero_on_top = false;
 
-    std::vector<std::vector<Object*>> data;
-    std::vector<Object*> initial_data;
+    std::vector<Group *> data;
+    Group *initial_data;
 
     int tick = 0;
 };

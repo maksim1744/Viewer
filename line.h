@@ -3,6 +3,7 @@
 
 #include "object.h"
 #include "scene.h"
+#include "treeitem.h"
 
 #include <QPainter>
 #include <string>

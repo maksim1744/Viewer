@@ -2,8 +2,7 @@
 #define OBJECT_H
 
 class Scene;
-
-#include "treeitem.h"
+class TreeItem;
 
 #include <QDebug>
 #include <QPainter>
@@ -31,6 +30,8 @@ public:
     static QString toString(double d);
 
     std::string type = "none";
+
+    bool hidden = false;
 };
 
 #endif // OBJECT_H

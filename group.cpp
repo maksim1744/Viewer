@@ -15,12 +15,12 @@ Group::Group(std::string s) {
 
 void Group::draw(QPainter &painter, Scene &scene) {
     for (auto object : objects)
-        if (object != nullptr)
+        if (object != nullptr && !object->hidden)
             object->draw(painter, scene);
 }
 
 void Group::writeToTree(TreeItem *parent) {
-    parent->appendChild(new TreeItem({name.c_str(), ""}, parent));
+    parent->appendChild(new TreeItem({name.c_str(), "", ""}, parent, this));
     parent = parent->child(parent->childCount() - 1);
     for (auto object : objects)
         if (object != nullptr)

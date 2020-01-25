@@ -2,6 +2,7 @@
 #define TREEMODEL_H
 
 #include "object.h"
+#include "group.h"
 
 #include <QAbstractItemModel>
 #include <QModelIndex>
@@ -15,10 +16,10 @@ class TreeModel : public QAbstractItemModel {
     Q_OBJECT
 
 public:
-    explicit TreeModel(std::vector<Object*> &initial_data, QObject *parent = nullptr);
+    explicit TreeModel(Group *initial_data, QObject *parent = nullptr);
     ~TreeModel();
 
-    void update(std::vector<std::vector<Object*>> &data, int tick);
+    void update(std::vector<Group *> &data, int tick);
 
     QVariant data(const QModelIndex &index, int role) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
@@ -29,10 +30,12 @@ public:
     QModelIndex parent(const QModelIndex &index) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
 private:
-    void addData(std::vector<Object*> &data, TreeItem *parent);
-    void setupModelData(std::vector<Object*> &initial_data, TreeItem *parent);
+    TreeItem *getItem(const QModelIndex &index) const;
+    void addData(Group *data, TreeItem *parent);
+    void setupModelData(Group *initial_data, TreeItem *parent);
 
     TreeItem *root_item;
 };

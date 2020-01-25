@@ -1,7 +1,9 @@
 #include "treeitem.h"
 
-TreeItem::TreeItem(const std::vector<QVariant> &data, TreeItem *parent)
-    : item_data(data), parent(parent) {}
+TreeItem::TreeItem(const std::vector<QVariant> &data, TreeItem *parent, Object *object)
+    : item_data(data), parent(parent), object(object) {
+    if (object != nullptr) checked = !object->hidden;
+}
 
 TreeItem::~TreeItem() {
     for (auto item : child_items) {
@@ -18,6 +20,15 @@ void TreeItem::popChild() {
         delete child_items.back();
         child_items.pop_back();
     }
+}
+
+bool TreeItem::isChecked() {
+    return checked;
+}
+
+void TreeItem::setChecked(bool checked) {
+    this->checked = checked;
+    if (object != nullptr) object->hidden = !checked;
 }
 
 TreeItem *TreeItem::child(int row) {

@@ -43,7 +43,7 @@ void Circle::draw(QPainter &painter, Scene &scene) {
 }
 
 void Circle::writeToTree(TreeItem *parent) {
-    parent->appendChild(new TreeItem({"circle", ""}, parent));
+    parent->appendChild(new TreeItem({"circle", ""}, parent, this));
     parent = parent->child(parent->childCount() - 1);
     parent->appendChild(new TreeItem({"c", toString(center)}, parent));
     parent->appendChild(new TreeItem({"r", toString(radius)}, parent));

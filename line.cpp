@@ -31,7 +31,7 @@ void Line::draw(QPainter &painter, Scene &scene) {
 }
 
 void Line::writeToTree(TreeItem *parent) {
-    parent->appendChild(new TreeItem({"line", ""}, parent));
+    parent->appendChild(new TreeItem({"line", ""}, parent, this));
     parent = parent->child(parent->childCount() - 1);
     parent->appendChild(new TreeItem({"s", toString(start)}, parent));
     parent->appendChild(new TreeItem({"f", toString(finish)}, parent));
