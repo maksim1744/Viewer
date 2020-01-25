@@ -92,9 +92,7 @@ int TreeModel::rowCount(const QModelIndex &parent) const {
 void TreeModel::addData(std::vector<Object*> &data, TreeItem *parent) {
     for (auto object : data) {
         if (object == nullptr) continue;
-        TreeItem *current = new TreeItem({object->type.c_str(), ""}, parent);
-        parent->appendChild(current);
-        object->writeToTree(current);
+        object->writeToTree(parent);
     }
 }
 

@@ -112,29 +112,66 @@ qreal Scene::transformLength(qreal length) {
 
 void Scene::loadData() {
     data.clear();
+    data.emplace_back();
+
     std::string s;
 
-    while (std::getline(std::cin, s)) {
+    std::vector<Group *> groups;
+
+    while (true) {
+        s = "";
+        bool ok = false;
+        if (std::getline(std::cin, s)) ok = true;
+
+        int current_level = 0;
+        while (!s.empty() && s[current_level] == ' ')
+            ++current_level;
+        s = s.substr(current_level, s.size());
+
+        while ((int)groups.size() > current_level) {
+            if (groups.size() >= 2) {
+                groups[groups.size() - 2]->objects.push_back(groups.back());
+            } else {
+                data.back().push_back(groups.back());
+            }
+            groups.pop_back();
+        }
+
+        if (!ok) break;
+
         if (s == "tick") {
             data.emplace_back();
         } else if (s == "end") {
             break;
-        } else if (data.empty()) {  // init
-            if (s.substr(0, 4) == "size") {
-                scene_size = Object::parsePoint(s, 5);
-            } else if (s.substr(0, 5) == "width") {
-                pen_width = std::strtol(&s[5], nullptr, 10);
-            } else if (s.substr(0, 5) == "speed") {
-                run_speed = std::strtod(&s[5], nullptr);
-            } else if (s.substr(0, 5) == "flipy") {
-                y_zero_on_top = true;
-            } else {
-                initial_data.push_back(stringToObject(s));
-            }
         } else {
-            data.back().push_back(stringToObject(s));
+            if (data.size() <= 1) {  // init
+                if (s.substr(0, 4) == "size") {
+                    scene_size = Object::parsePoint(s, 5);
+                } else if (s.substr(0, 5) == "width") {
+                    pen_width = std::strtol(&s[5], nullptr, 10);
+                } else if (s.substr(0, 5) == "speed") {
+                    run_speed = std::strtod(&s[5], nullptr);
+                } else if (s.substr(0, 5) == "flipy") {
+                    y_zero_on_top = true;
+                }
+            }
+
+            Object *object = stringToObject(s);
+            if (object == nullptr) continue;
+
+            if (object->type == "group") {
+                groups.push_back((Group *)object);
+            } else {
+                if (groups.empty())
+                    data.back().push_back(object);
+                else
+                    groups.back()->objects.push_back(object);
+            }
         }
     }
+
+    initial_data = data[0];
+    data.erase(data.begin());
 
     Rectangle *rect = new Rectangle();
     rect->center = scene_size / 2;
@@ -156,6 +193,7 @@ Object* Scene::stringToObject(std::string s) {
     if (type.substr(0, 4) == "rect") return new Rectangle(s);
     else if (type == "circle") return new Circle(s);
     else if (type == "line") return new Line(s);
+    else if (type == "group") return new Group(s);
     return nullptr;
 }
 

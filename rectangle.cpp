@@ -38,6 +38,8 @@ void Rectangle::draw(QPainter &painter, Scene &scene) {
 }
 
 void Rectangle::writeToTree(TreeItem *parent) {
+    parent->appendChild(new TreeItem({"rect", ""}, parent));
+    parent = parent->child(parent->childCount() - 1);
     parent->appendChild(new TreeItem({"c", toString(center)}, parent));
     parent->appendChild(new TreeItem({"s", toString(size)}, parent));
     parent->appendChild(new TreeItem({"col", toString(color)}, parent));

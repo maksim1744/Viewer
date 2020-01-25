@@ -2,6 +2,7 @@
 #define SCENE_H
 
 #include "circle.h"
+#include "group.h"
 #include "line.h"
 #include "object.h"
 #include "rectangle.h"
