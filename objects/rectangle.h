@@ -2,7 +2,6 @@
 #define RECTANGLE_H
 
 #include "object.h"
-#include "scene.h"
 #include "treeitem.h"
 
 #include <QColor>
@@ -16,7 +15,7 @@ public:
     Rectangle();
     Rectangle(std::string s);
 
-    void draw(QPainter &painter, Scene &scene) override;
+    void draw(DrawProperties &draw_properties) override;
     void writeToTree(TreeItem *parent) override;
 
     QPointF center, size;

@@ -3,8 +3,17 @@
 Object::Object() {
 }
 
-void Object::draw(QPainter &painter, Scene &scene) {}
+void Object::draw(DrawProperties &draw_properties) {}
 void Object::writeToTree(TreeItem *parent) {}
+
+bool Object::needToDraw(DrawProperties &draw_properties) {
+    if (tree_item != nullptr && !tree_item->isChecked()) return false;
+    if (tags.empty()) return true;
+    for (auto &tag : tags)
+        if (draw_properties.active_tags.find(tag) != draw_properties.active_tags.end())
+            return true;
+    return false;
+}
 
 QPointF Object::parsePoint(std::string &s, int ind) {
     auto end = &s[ind + 1];
@@ -28,6 +37,15 @@ QColor Object::parseColor(std::string &s, int ind) {
         result.setAlpha(std::strtol(end, &end, 10));
     }
     return result;
+}
+
+std::string Object::parseTag(std::string &s, size_t &ind) {
+    std::string tag;
+    while (ind < s.size() && s[ind] != ' ') {
+        tag.push_back(s[ind]);
+        ++ind;
+    }
+    return tag;
 }
 
 QString Object::toString(QPointF &point) {

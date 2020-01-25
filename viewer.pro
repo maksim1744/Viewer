@@ -18,27 +18,29 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    circle.cpp \
-    line.cpp \
+    drawproperties.cpp \
     main.cpp \
     mainwindow.cpp \
-    object.cpp \
-    rectangle.cpp \
+    objects\circle.cpp \
+    objects\group.cpp \
+    objects\line.cpp \
+    objects\object.cpp \
+    objects\rectangle.cpp \
     scene.cpp \
     treeitem.cpp \
-    treemodel.cpp \
-    group.cpp
+    treemodel.cpp
 
 HEADERS += \
-    circle.h \
-    line.h \
+    drawproperties.h \
     mainwindow.h \
-    object.h \
-    rectangle.h \
+    objects\circle.h \
+    objects\group.h \
+    objects\line.h \
+    objects\object.h \
+    objects\rectangle.h \
     scene.h \
     treeitem.h \
-    treemodel.h \
-    group.h
+    treemodel.h
 
 FORMS += \
     mainwindow.ui

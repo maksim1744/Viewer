@@ -11,28 +11,18 @@ void Scene::paintEvent(QPaintEvent *event) {
         initScene();
     }
 
-    painter = new QPainter(this);
-    painter->setPen(QPen(Qt::white, 30));
-    painter->fillRect(event->rect(), QBrush(QColor(200, 200, 200)));
-    if (initial_data != nullptr && !initial_data->hidden)
-        initial_data->draw(*painter, *this);
-    if (data[tick] != nullptr && !data[tick]->hidden)
-        data[tick]->draw(*painter, *this);
-    // for (auto object : initial_data) {
-    //     if (object != nullptr && !object->hidden)
-    //         object->draw(*painter, *this);
-    // }
-    // if (0 <= tick && tick < (int)data.size()) {
-    //     for (auto object : data[tick]) {
-    //         if (object == nullptr) continue;
-    //         object->draw(*painter, *this);
-    //     }
-    // }
-    painter->end();
-}
+    draw_properties.window_size = size();
 
-int Scene::getPenWidth() {
-    return pen_width;
+    draw_properties.painter.begin(this);
+    draw_properties.painter.setPen(QPen(Qt::white, 30));
+    draw_properties.painter.fillRect(event->rect(), QBrush(QColor(200, 200, 200)));
+
+    if (initial_data != nullptr)
+        initial_data->draw(draw_properties);
+    if (data[tick] != nullptr)
+        data[tick]->draw(draw_properties);
+
+    draw_properties.painter.end();
 }
 
 int Scene::getTickCount() {
@@ -59,6 +49,29 @@ void Scene::setObjectTree(QTreeView *object_tree) {
 void Scene::setTickLabel(QLabel *label) {
     this->tick_label = label;
     updateTickLabel();
+}
+
+void Scene::setTagsList(QListWidget *tags_list) {
+    this->tags_list = tags_list;
+
+    for (auto &tag : draw_properties.active_tags) {
+        QListWidgetItem* item = new QListWidgetItem(tag.c_str(), this->tags_list);
+        item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
+        item->setCheckState(Qt::Checked);
+    }
+
+    connect(this->tags_list, &QListWidget::itemChanged, [&](){
+        QListWidgetItem *item = nullptr;
+        for (int i = 0; i < this->tags_list->count(); ++i) {
+            item = this->tags_list->item(i);
+            if (item->checkState() == Qt::Checked) {
+                draw_properties.active_tags.insert(item->text().toLocal8Bit().constData());
+            } else {
+                draw_properties.active_tags.erase(item->text().toLocal8Bit().constData());
+            }
+        }
+        update();
+    });
 }
 
 void Scene::updateTickSlider() {
@@ -95,24 +108,24 @@ void Scene::mousePressEvent(QMouseEvent *event) {
 
 void Scene::mouseMoveEvent(QMouseEvent *event) {
     QPointF mouse_pos = event->pos();
-    auto delta = (mouse_pos - prev_mouse_pos) / scale;
-    if (!y_zero_on_top)
+    auto delta = (mouse_pos - prev_mouse_pos) / draw_properties.scale;
+    if (!draw_properties.y_zero_on_top)
         delta.ry() *= -1;
-    scene_pos -= delta;
+    draw_properties.scene_pos -= delta;
     prev_mouse_pos = mouse_pos;
     update();
 }
 
 QPointF Scene::transformPoint(QPointF point) {
-    point -= scene_pos;
-    point *= scale;
-    if (!y_zero_on_top)
+    point -= draw_properties.scene_pos;
+    point *= draw_properties.scale;
+    if (!draw_properties.y_zero_on_top)
         point.ry() = size().height() - point.ry();
     return point;
 }
 
-qreal Scene::transformLength(qreal length) {
-    return length * scale;
+double Scene::transformLength(double length) {
+    return length * draw_properties.scale;
 }
 
 void Scene::loadData() {
@@ -151,18 +164,21 @@ void Scene::loadData() {
         } else {
             if (data.size() <= 1) {  // init
                 if (s.substr(0, 4) == "size") {
-                    scene_size = Object::parsePoint(s, 5);
+                    draw_properties.scene_size = Object::parsePoint(s, 5);
                 } else if (s.substr(0, 5) == "width") {
-                    pen_width = std::strtol(&s[5], nullptr, 10);
+                    draw_properties.pen_width = std::strtol(&s[5], nullptr, 10);
                 } else if (s.substr(0, 5) == "speed") {
                     run_speed = std::strtod(&s[5], nullptr);
                 } else if (s.substr(0, 5) == "flipy") {
-                    y_zero_on_top = true;
+                    draw_properties.y_zero_on_top = true;
                 }
             }
 
             Object *object = stringToObject(s);
             if (object == nullptr) continue;
+
+            for (auto &tag : object->tags)
+                draw_properties.active_tags.insert(tag);
 
             if (object->type == "group") {
                 groups.push_back((Group *)object);
@@ -179,8 +195,8 @@ void Scene::loadData() {
     data.erase(data.begin());
 
     Rectangle *rect = new Rectangle();
-    rect->center = scene_size / 2;
-    rect->size = scene_size;
+    rect->center = draw_properties.scene_size / 2;
+    rect->size = draw_properties.scene_size;
     rect->color = Qt::white;
     rect->fill = true;
     initial_data->objects.insert(initial_data->objects.begin(), rect);
@@ -235,19 +251,20 @@ void Scene::onPlayPressed() {
 void Scene::initScene() {
     is_initialized = true;
 
-    scene_pos = {0, 0};
-    if (scene_size.x() != 0 && scene_size.y() != 0) {
-        scale = std::min((qreal)size().width() / scene_size.x(), (qreal)size().height() / scene_size.y());
-        scene_pos.rx() = -((qreal)size().width() / scale - scene_size.x()) / 2;
-        scene_pos.ry() = -((qreal)size().height() / scale - scene_size.y()) / 2;
+    draw_properties.scene_pos = {0, 0};
+    if (draw_properties.scene_size.x() != 0 && draw_properties.scene_size.y() != 0) {
+        draw_properties.scale = std::min((double)size(). width() / draw_properties.scene_size.x(),
+                                         (double)size().height() / draw_properties.scene_size.y());
+        draw_properties.scene_pos.rx() = -((double)size(). width() / draw_properties.scale - draw_properties.scene_size.x()) / 2;
+        draw_properties.scene_pos.ry() = -((double)size().height() / draw_properties.scale - draw_properties.scene_size.y()) / 2;
     }
 }
 
 void Scene::setScale(double new_scale) {
-    double k = (1.0 / scale - 1.0 / new_scale) / 2;
-    scene_pos.rx() += size().width() * k;
-    scene_pos.ry() += size().height() * k;
-    scale = new_scale;
+    double k = (1.0 / draw_properties.scale - 1.0 / new_scale) / 2;
+    draw_properties.scene_pos.rx() += size().width() * k;
+    draw_properties.scene_pos.ry() += size().height() * k;
+    draw_properties.scale = new_scale;
     if (new_scale == 1) {
         initScene();
     }
@@ -268,9 +285,9 @@ void Scene::setTick(int new_tick) {
 
 void Scene::keyPressEvent(QKeyEvent *event) {
     if (event->key() == Qt::Key_Equal) {
-        setScale(scale * 1.5);
+        setScale(draw_properties.scale * 1.5);
     } else if (event->key() == Qt::Key_Minus) {
-        setScale(scale / 1.5);
+        setScale(draw_properties.scale / 1.5);
     } else if (event->key() == Qt::Key_0) {
         setScale(1);
     } else if (event->key() == Qt::Key_Right) {
@@ -283,5 +300,5 @@ void Scene::keyPressEvent(QKeyEvent *event) {
 }
 
 void Scene::wheelEvent(QWheelEvent *event) {
-    setScale(scale * std::pow(1.1, event->angleDelta().y() / 120.0));
+    setScale(draw_properties.scale * std::pow(1.1, event->angleDelta().y() / 120.0));
 }

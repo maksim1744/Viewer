@@ -1,17 +1,15 @@
 #ifndef TREEITEM_H
 #define TREEITEM_H
 
-#include "object.h"
-
+#include <QDebug>
 #include <QVariant>
 #include <QVector>
-#include <QDebug>
 
 #include <vector>
 
 class TreeItem {
 public:
-    explicit TreeItem(const std::vector<QVariant> &data, TreeItem *parent = nullptr, Object *object = nullptr);
+    explicit TreeItem(const std::vector<QVariant> &data, TreeItem *parent = nullptr);
     ~TreeItem();
 
     void appendChild(TreeItem *child);
@@ -32,7 +30,6 @@ private:
     std::vector<QVariant> item_data;
     TreeItem *parent;
     bool checked = true;
-    Object *object = nullptr;
 };
 
 #endif // TREEITEM_H

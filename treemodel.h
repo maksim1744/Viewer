@@ -1,8 +1,8 @@
 #ifndef TREEMODEL_H
 #define TREEMODEL_H
 
-#include "object.h"
-#include "group.h"
+#include "objects/object.h"
+#include "objects/group.h"
 
 #include <QAbstractItemModel>
 #include <QModelIndex>

@@ -15,15 +15,19 @@ MainWindow::MainWindow(QWidget *parent)
     auto object_tree = new QTreeView();
     scene->setObjectTree(object_tree);
 
+    auto tags_list = new QListWidget();
+    scene->setTagsList(tags_list);
+
     auto splitter1 = new QSplitter();
     splitter1->setOrientation(Qt::Horizontal);
     splitter1->addWidget(object_tree);
     splitter1->addWidget(scene);
-    splitter1->setSizes(QList<int>() << 500 << 1200);
+    splitter1->addWidget(tags_list);
+    splitter1->setSizes(QList<int>() << 600 << 1200 << 200);
     grid->addWidget(splitter1, 0, 0);
 
-    object_tree->setColumnWidth(0, 150);
-    object_tree->setColumnWidth(1, 250);
+    object_tree->setColumnWidth(0, 250);
+    object_tree->setColumnWidth(1, 300);
 
     auto tick_label = new QLabel();
     tick_label->setMinimumWidth(150);

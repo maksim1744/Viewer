@@ -17,6 +17,7 @@
 #include <QSlider>
 #include <QSplitter>
 #include <QTreeView>
+#include <QListWidget>
 
 // QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

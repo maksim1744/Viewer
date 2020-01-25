@@ -1,19 +1,19 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-class Group;
-
-#include "circle.h"
-#include "group.h"
-#include "line.h"
-#include "object.h"
-#include "rectangle.h"
+#include "drawproperties.h"
+#include "objects/circle.h"
+#include "objects/group.h"
+#include "objects/line.h"
+#include "objects/object.h"
+#include "objects/rectangle.h"
 #include "treemodel.h"
 
 #include <QBrush>
 #include <QColor>
 #include <QDebug>
 #include <QLabel>
+#include <QListWidget>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QPushButton>
@@ -33,15 +33,15 @@ public:
     Scene(QWidget *parent);
 
     QPointF transformPoint(QPointF point);
-    qreal transformLength(qreal length);
+    double transformLength(double length);
 
-    int getPenWidth();
     int getTickCount();
 
     void setTickSlider(QSlider *tick_slider);
     void setPlayButton(QPushButton *button);
     void setTickLabel(QLabel *tick_label);
     void setObjectTree(QTreeView *object_tree);
+    void setTagsList(QListWidget *tags_list);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -65,23 +65,17 @@ private:
     QLabel *tick_label = nullptr;
     QPushButton *play_button = nullptr;
     QTreeView *object_tree = nullptr;
+    QListWidget *tags_list = nullptr;
 
-    QPainter *painter;
+    DrawProperties draw_properties;
 
     bool is_initialized = false;
 
-    QPointF scene_size = {100, 100};
-    int pen_width = 1;
-
-    QPointF scene_pos = {0, 0};
     QPointF prev_mouse_pos;
-    double scale = 1;
 
     double run_speed = 1;
     bool is_running = false;
     QTimer *run_timer;
-
-    bool y_zero_on_top = false;
 
     std::vector<Group *> data;
     Group *initial_data;
