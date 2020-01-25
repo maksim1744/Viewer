@@ -299,11 +299,15 @@ void Scene::keyPressEvent(QKeyEvent *event) {
         setTick(tick + 1);
     } else if (event->key() == Qt::Key_Left) {
         setTick(tick - 1);
-    } else if (event->key() == Qt::Key_Space) {
+    } else if (event->key() == Qt::Key_Space || event->key() == Qt::Key_P) {
         onPlayPressed();
     } else if (event->key() == Qt::Key_F) {
         main_window->showMaximized();
         QTimer::singleShot(0, this, [&](){ setScale(1); });
+    } else if (event->key() == Qt::Key_R) {
+        if (is_running)
+            onPlayPressed();
+        setTick(0);
     }
 }
 
