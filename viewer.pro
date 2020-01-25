@@ -25,6 +25,7 @@ SOURCES += \
     objects\group.cpp \
     objects\line.cpp \
     objects\object.cpp \
+    objects\poly.cpp \
     objects\rectangle.cpp \
     scene.cpp \
     treeitem.cpp \
@@ -37,6 +38,7 @@ HEADERS += \
     objects\group.h \
     objects\line.h \
     objects\object.h \
+    objects\poly.h \
     objects\rectangle.h \
     scene.h \
     treeitem.h \

@@ -233,6 +233,7 @@ Object* Scene::stringToObject(std::string s) {
     else if (type == "circle") return new Circle(s);
     else if (type == "line") return new Line(s);
     else if (type == "group") return new Group(s);
+    else if (type == "poly") return new Poly(s);
     return nullptr;
 }
 

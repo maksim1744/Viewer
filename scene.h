@@ -6,6 +6,7 @@
 #include "objects/group.h"
 #include "objects/line.h"
 #include "objects/object.h"
+#include "objects/poly.h"
 #include "objects/rectangle.h"
 #include "treemodel.h"
 
