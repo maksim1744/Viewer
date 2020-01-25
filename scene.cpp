@@ -3,6 +3,8 @@
 Scene::Scene(QWidget *parent) : QWidget(parent) {
     this->setFocusPolicy(Qt::FocusPolicy::StrongFocus);
 
+    main_window = parent;
+
     loadData();
 }
 
@@ -296,6 +298,9 @@ void Scene::keyPressEvent(QKeyEvent *event) {
         setTick(tick - 1);
     } else if (event->key() == Qt::Key_Space) {
         onPlayPressed();
+    } else if (event->key() == Qt::Key_F) {
+        main_window->showMaximized();
+        QTimer::singleShot(0, this, [&](){ setScale(1); });
     }
 }
 

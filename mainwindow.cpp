@@ -24,6 +24,9 @@ MainWindow::MainWindow(QWidget *parent)
     splitter1->addWidget(scene);
     splitter1->addWidget(tags_list);
     splitter1->setSizes(QList<int>() << 600 << 1200 << 200);
+    splitter1->setStretchFactor(0, 0);
+    splitter1->setStretchFactor(1, 1);
+    splitter1->setStretchFactor(2, 0);
     grid->addWidget(splitter1, 0, 0);
 
     object_tree->setColumnWidth(0, 250);
@@ -109,6 +112,8 @@ MainWindow::MainWindow(QWidget *parent)
     QWidget *widget2 = new QWidget();
     widget2->setLayout(grid);
     this->setCentralWidget(widget2);
+
+    scene->setFocus();
 }
 
 MainWindow::~MainWindow() {

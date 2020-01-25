@@ -81,6 +81,8 @@ private:
     Group *initial_data;
 
     int tick = 0;
+
+    QWidget *main_window;
 };
 
 #endif // SCENE_H
