@@ -15,12 +15,25 @@ MainWindow::MainWindow(QWidget *parent)
     auto object_tree = new QTreeView();
     scene->setObjectTree(object_tree);
 
+    auto msg_box = new QPlainTextEdit();
+    auto doc = msg_box->document();
+    auto font = doc->defaultFont();
+    font.setFamily("Courier New");
+    doc->setDefaultFont(font);
+    scene->setMessageBox(msg_box);
+
+    auto splitter2 = new QSplitter();
+    splitter2->setOrientation(Qt::Vertical);
+    splitter2->addWidget(object_tree);
+    splitter2->addWidget(msg_box);
+    splitter2->setSizes(QList<int>() << 800 << 400);
+
     auto tags_list = new QListWidget();
     scene->setTagsList(tags_list);
 
     auto splitter1 = new QSplitter();
     splitter1->setOrientation(Qt::Horizontal);
-    splitter1->addWidget(object_tree);
+    splitter1->addWidget(splitter2);
     splitter1->addWidget(scene);
     splitter1->addWidget(tags_list);
     splitter1->setSizes(QList<int>() << 600 << 1200 << 200);

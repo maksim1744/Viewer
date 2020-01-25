@@ -10,14 +10,15 @@
 #include <QGridLayout>
 #include <QLabel>
 #include <QLayout>
+#include <QListWidget>
 #include <QMainWindow>
 #include <QPainter>
+#include <QPlainTextEdit>
 #include <QPushButton>
 #include <QSizePolicy>
 #include <QSlider>
 #include <QSplitter>
 #include <QTreeView>
-#include <QListWidget>
 
 // QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

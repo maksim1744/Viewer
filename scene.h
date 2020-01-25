@@ -16,6 +16,7 @@
 #include <QListWidget>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QPlainTextEdit>
 #include <QPushButton>
 #include <QSlider>
 #include <QSlider>
@@ -42,6 +43,7 @@ public:
     void setTickLabel(QLabel *tick_label);
     void setObjectTree(QTreeView *object_tree);
     void setTagsList(QListWidget *tags_list);
+    void setMessageBox(QPlainTextEdit *msg_box);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -66,6 +68,7 @@ private:
     QPushButton *play_button = nullptr;
     QTreeView *object_tree = nullptr;
     QListWidget *tags_list = nullptr;
+    QPlainTextEdit *msg_box = nullptr;
 
     DrawProperties draw_properties;
 
@@ -79,6 +82,7 @@ private:
 
     std::vector<Group *> data;
     Group *initial_data;
+    std::vector<std::string> messages;
 
     int tick = 0;
 

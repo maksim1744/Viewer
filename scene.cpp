@@ -13,6 +13,8 @@ void Scene::paintEvent(QPaintEvent *event) {
         initScene();
     }
 
+    msg_box->setPlainText(messages[tick].c_str());
+
     draw_properties.window_size = size();
 
     draw_properties.painter.begin(this);
@@ -74,6 +76,10 @@ void Scene::setTagsList(QListWidget *tags_list) {
         }
         update();
     });
+}
+
+void Scene::setMessageBox(QPlainTextEdit *msg_box) {
+    this->msg_box = msg_box;
 }
 
 void Scene::updateTickSlider() {
@@ -163,9 +169,14 @@ void Scene::loadData() {
         if (!ok) break;
 
         if (s == "tick") {
+            messages.emplace_back();
             data.push_back(new Group("tick_" + std::to_string(data.size())));
         } else if (s == "end") {
             break;
+        } else if (s.substr(0, 4) == "msg ") {
+            if (!messages.empty()) {
+                messages.back() += s.substr(4, s.size()) + '\n';
+            }
         } else {
             if (data.size() <= 1) {  // init
                 if (s.substr(0, 4) == "size") {
