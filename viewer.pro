@@ -24,7 +24,9 @@ SOURCES += \
     mainwindow.cpp \
     object.cpp \
     rectangle.cpp \
-    scene.cpp
+    scene.cpp \
+    treeitem.cpp \
+    treemodel.cpp
 
 HEADERS += \
     circle.h \
@@ -32,7 +34,9 @@ HEADERS += \
     mainwindow.h \
     object.h \
     rectangle.h \
-    scene.h
+    scene.h \
+    treeitem.h \
+    treemodel.h
 
 FORMS += \
     mainwindow.ui

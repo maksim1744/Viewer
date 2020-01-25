@@ -47,6 +47,11 @@ void Scene::setPlayButton(QPushButton *button) {
     connect(play_button, &QPushButton::released, [&](){this->onPlayPressed();});
 }
 
+void Scene::setObjectTree(QTreeView *object_tree) {
+    this->object_tree = object_tree;
+    updateObjectTree();
+}
+
 void Scene::setTickLabel(QLabel *label) {
     this->tick_label = label;
     updateTickLabel();
@@ -67,6 +72,16 @@ void Scene::updateTickLabel() {
     std::string current = std::to_string(tick + 1);
     std::string count = std::to_string(data.size());
     tick_label->setText(QString((current + " / " + count).c_str()));
+}
+
+void Scene::updateObjectTree() {
+    if (!is_running) {
+        TreeModel *model = new TreeModel(initial_data);
+        model->update(data, tick);
+        auto m = object_tree->model();
+        object_tree->setModel(model);
+        delete m;
+    }
 }
 
 void Scene::mousePressEvent(QMouseEvent *event) {
@@ -159,6 +174,7 @@ void Scene::onPlayPressed() {
                 is_running = false;
                 play_button->setText("Play");
                 run_timer->stop();
+                updateObjectTree();
             }
             setTick(tick);
         });
@@ -167,6 +183,7 @@ void Scene::onPlayPressed() {
         run_timer->stop();
         play_button->setText("Play");
         is_running = false;
+        updateObjectTree();
     }
 }
 
@@ -200,6 +217,7 @@ void Scene::setTick(int new_tick) {
     tick = new_tick;
     updateTickSlider();
     updateTickLabel();
+    updateObjectTree();
     update();
 }
 

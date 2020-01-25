@@ -29,3 +29,10 @@ void Line::draw(QPainter &painter, Scene &scene) {
     painter.setPen(QPen(color, width));
     painter.drawLine(scene.transformPoint(start), scene.transformPoint(finish));
 }
+
+void Line::writeToTree(TreeItem *parent) {
+    parent->appendChild(new TreeItem({"s", toString(start)}, parent));
+    parent->appendChild(new TreeItem({"f", toString(finish)}, parent));
+    parent->appendChild(new TreeItem({"col", toString(color)}, parent));
+    parent->appendChild(new TreeItem({"w", toString(width)}, parent));
+}

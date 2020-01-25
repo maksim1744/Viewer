@@ -4,9 +4,10 @@
 #include "object.h"
 #include "scene.h"
 
+#include <QColor>
 #include <QPainter>
 #include <QPointF>
-#include <QColor>
+
 #include <string>
 
 class Rectangle : public Object {
@@ -15,6 +16,7 @@ public:
     Rectangle(std::string s);
 
     void draw(QPainter &painter, Scene &scene) override;
+    void writeToTree(TreeItem *parent) override;
 
     QPointF center, size;
     QColor color;

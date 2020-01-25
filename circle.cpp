@@ -41,3 +41,11 @@ void Circle::draw(QPainter &painter, Scene &scene) {
         painter.drawArc(rect, 0, 360 * 16);
     }
 }
+
+void Circle::writeToTree(TreeItem *parent) {
+    parent->appendChild(new TreeItem({"c", toString(center)}, parent));
+    parent->appendChild(new TreeItem({"r", toString(radius)}, parent));
+    parent->appendChild(new TreeItem({"col", toString(color)}, parent));
+    parent->appendChild(new TreeItem({"f", toString(fill)}, parent));
+    parent->appendChild(new TreeItem({"w", toString(width)}, parent));
+}

@@ -1,11 +1,11 @@
 #include "rectangle.h"
 
 Rectangle::Rectangle() {
-    type = "rectangle";
+    type = "rect";
 }
 
 Rectangle::Rectangle(std::string s) {
-    type = "rectangle";
+    type = "rect";
 
     color = QColor(Qt::black);
     size_t ind = 0;
@@ -35,4 +35,12 @@ void Rectangle::draw(QPainter &painter, Scene &scene) {
         painter.setPen(QPen(color, width));
         painter.drawRect(rect);
     }
+}
+
+void Rectangle::writeToTree(TreeItem *parent) {
+    parent->appendChild(new TreeItem({"c", toString(center)}, parent));
+    parent->appendChild(new TreeItem({"s", toString(size)}, parent));
+    parent->appendChild(new TreeItem({"col", toString(color)}, parent));
+    parent->appendChild(new TreeItem({"f", toString(fill)}, parent));
+    parent->appendChild(new TreeItem({"w", toString(width)}, parent));
 }

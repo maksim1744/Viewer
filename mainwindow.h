@@ -13,8 +13,10 @@
 #include <QMainWindow>
 #include <QPainter>
 #include <QPushButton>
+#include <QSizePolicy>
 #include <QSlider>
 #include <QSplitter>
+#include <QTreeView>
 
 // QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -32,7 +34,6 @@ private:
 
     Scene *scene;
 
-    int last_tick = -1;
     int tick = 0;
 };
 #endif // MAINWINDOW_H

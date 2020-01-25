@@ -13,6 +13,7 @@ public:
     Circle(std::string s);
 
     void draw(QPainter &painter, Scene &scene) override;
+    void writeToTree(TreeItem *parent) override;
 
     QPointF center;
     qreal radius;

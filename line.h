@@ -13,6 +13,7 @@ public:
     Line(std::string s);
 
     void draw(QPainter &painter, Scene &scene) override;
+    void writeToTree(TreeItem *parent) override;
 
     QPointF start, finish;
     QColor color;

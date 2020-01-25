@@ -10,12 +10,20 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto grid = new QGridLayout();
 
-    auto splitter1 = new QSplitter();
     scene = new Scene(this);
+
+    auto object_tree = new QTreeView();
+    scene->setObjectTree(object_tree);
+
+    auto splitter1 = new QSplitter();
     splitter1->setOrientation(Qt::Horizontal);
+    splitter1->addWidget(object_tree);
     splitter1->addWidget(scene);
-    splitter1->setSizes(QList<int>() << 1600);
+    splitter1->setSizes(QList<int>() << 500 << 1200);
     grid->addWidget(splitter1, 0, 0);
+
+    object_tree->setColumnWidth(0, 150);
+    object_tree->setColumnWidth(1, 250);
 
     auto tick_label = new QLabel();
     tick_label->setMinimumWidth(150);
