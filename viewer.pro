@@ -27,6 +27,7 @@ SOURCES += \
     objects\object.cpp \
     objects\poly.cpp \
     objects\rectangle.cpp \
+    objects\text.cpp \
     scene.cpp \
     treeitem.cpp \
     treemodel.cpp
@@ -40,6 +41,7 @@ HEADERS += \
     objects\object.h \
     objects\poly.h \
     objects\rectangle.h \
+    objects\text.h \
     scene.h \
     treeitem.h \
     treemodel.h

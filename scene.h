@@ -8,6 +8,7 @@
 #include "objects/object.h"
 #include "objects/poly.h"
 #include "objects/rectangle.h"
+#include "objects/text.h"
 #include "treemodel.h"
 
 #include <QBrush>

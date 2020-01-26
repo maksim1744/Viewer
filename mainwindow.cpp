@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     splitter1->addWidget(splitter2);
     splitter1->addWidget(scene);
     splitter1->addWidget(tags_list);
-    splitter1->setSizes(QList<int>() << 600 << 1200 << 200);
+    splitter1->setSizes(QList<int>() << 600 << 1100 << 300);
     splitter1->setStretchFactor(0, 0);
     splitter1->setStretchFactor(1, 1);
     splitter1->setStretchFactor(2, 0);

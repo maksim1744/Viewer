@@ -187,6 +187,8 @@ void Scene::loadData() {
                     run_speed = std::strtod(&s[5], nullptr);
                 } else if (s.substr(0, 5) == "flipy") {
                     draw_properties.y_zero_on_top = true;
+                } else if (s.substr(0, 4) == "font") {
+                    draw_properties.font_size = std::strtod(&s[5], nullptr);
                 }
             }
 
@@ -234,6 +236,7 @@ Object* Scene::stringToObject(std::string s) {
     else if (type == "line") return new Line(s);
     else if (type == "group") return new Group(s);
     else if (type == "poly") return new Poly(s);
+    else if (type == "text") return new Text(s);
     return nullptr;
 }
 

@@ -26,6 +26,8 @@ public:
 
     int pen_width = 1;
 
+    double font_size = 1;
+
     std::set<std::string> active_tags;
 };
 
