@@ -107,7 +107,9 @@ void Scene::updateObjectTree() {
         auto m = object_tree->model();
         object_tree->setModel(model);
         if (m != nullptr) {
-            data[((TreeModel *)m)->getCurrentTick()]->removeTreeItems();
+            int current_tick = ((TreeModel *)m)->getCurrentTick();
+            if (0 <= current_tick && current_tick < (int)data.size() && data[current_tick] != nullptr)
+                data[current_tick]->removeTreeItems();
             delete m;
         }
     }
@@ -221,7 +223,8 @@ void Scene::loadData() {
 
     initial_data->name = "initial";
 
-    if (data.empty()) data.emplace_back();
+    if (data.empty()) data.push_back(nullptr);
+    if (messages.empty()) messages.emplace_back();
     updateTickSlider();
 }
 
@@ -248,14 +251,12 @@ void Scene::onPlayPressed() {
         is_running = true;
         run_timer = new QTimer();
         run_timer->setInterval(1000.0 / run_speed);
-        connect(run_timer, &QTimer::timeout, [&](){
+        connect(run_timer, &QTimer::timeout, [&]() {
             ++tick;
-            if (tick == (int)data.size()) {
-                --tick;
+            if (tick >= (int)data.size()) {
                 is_running = false;
                 play_button->setText("Play");
                 run_timer->stop();
-                updateObjectTree();
             }
             setTick(tick);
         });
@@ -264,7 +265,7 @@ void Scene::onPlayPressed() {
         run_timer->stop();
         play_button->setText("Play");
         is_running = false;
-        updateObjectTree();
+        setTick(tick);
     }
 }
 
