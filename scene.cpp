@@ -214,13 +214,6 @@ void Scene::loadData() {
     initial_data = data[0];
     data.erase(data.begin());
 
-    Rectangle *rect = new Rectangle();
-    rect->center = draw_properties.scene_size / 2;
-    rect->size = draw_properties.scene_size;
-    rect->color = Qt::white;
-    rect->fill = true;
-    initial_data->objects.insert(initial_data->objects.begin(), rect);
-
     initial_data->name = "initial";
 
     if (data.empty()) data.push_back(nullptr);
